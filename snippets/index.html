@@ -10,7 +10,10 @@
   <meta property="og:title" content="Snippets for macOS">
   <meta property="og:description" content="Keep, find and live-preview the code you reuse. Free, and everything stays on your Mac.">
   <meta property="og:image" content="https://halilbagosi.github.io/snippets/media/gallery-dark.webp">
-  <link rel="icon" href="icon.png">
+  <!-- favicons -->
+  <link rel="icon" href="icon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="icon-dark.png" media="(prefers-color-scheme: dark)">
+<!-- /favicons -->
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="home.css">
   <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -24,12 +27,13 @@
     <div class="glow glow-d"></div>
   </div>
 
+  <!-- header -->
   <header class="nav glass">
-    <a class="brand" href="./"><img src="icon.png" alt="">snippets</a>
+    <a class="brand" href="./"><img class="theme-light" src="icon-light.png" alt=""><img class="theme-dark" src="icon-dark.png" alt="">snippets</a>
     <nav class="nav-links" aria-label="Site">
-      <a href="#features">features</a>
-      <a href="#privacy">privacy</a>
       <a href="support/">support</a>
+      <a href="privacy/">privacy</a>
+      <a href="license/">license</a>
     </nav>
     <div class="theme-toggle" role="group" aria-label="Appearance">
       <span class="thumb" aria-hidden="true"></span>
@@ -39,6 +43,7 @@
     </div>
     <a class="btn btn-primary" href="#download"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10"/></svg><span>download</span></a>
   </header>
+<!-- /header -->
 
   <main>
     <!-- Hero -->
@@ -204,7 +209,8 @@
 
     <!-- Download -->
     <section id="download" class="download wrap">
-      <img class="download-icon reveal" src="icon.png" width="128" height="128" alt="">
+      <img class="download-icon reveal theme-light" src="icon-light.png" width="128" height="128" alt="">
+      <img class="download-icon reveal theme-dark" src="icon-dark.png" width="128" height="128" alt="" loading="lazy">
       <h2 class="headline reveal">Get Snippets.</h2>
       <p class="lede reveal">Free to use, at home and at work.</p>
       <div class="reveal">

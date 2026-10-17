@@ -108,12 +108,13 @@
 
 /* Light/dark media: an element marked .theme-light shows only in light,
    .theme-dark only in dark. Hidden <img loading=lazy> never downloads. */
-.theme-dark { display: none !important; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .theme-dark { display: none !important; }
+}
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-dark { display: revert !important; }
   :root:not([data-theme="light"]) .theme-light { display: none !important; }
 }
-:root[data-theme="dark"] .theme-dark { display: revert !important; }
+:root[data-theme="light"] .theme-dark { display: none !important; }
 :root[data-theme="dark"] .theme-light { display: none !important; }
 
 /* ───────────── Base ───────────── */
