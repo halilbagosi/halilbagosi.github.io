@@ -109,6 +109,43 @@
   }, { threshold: 0.25 });
   videos.forEach((v) => player.observe(v));
 
+  // ───────────── Menu bar scenes: the panel opens from the scissors ─────────────
+  // Opens once the scene is well in view, as if someone just clicked the
+  // status item; after that the scissors toggle it, and a click on the
+  // desktop closes it — the way the real panel behaves.
+
+  const desks = [...document.querySelectorAll("[data-desk]")];
+  const setOpen = (desk, open) => {
+    desk.classList.toggle("is-open", open);
+    desk.querySelector(".desk-scissors").setAttribute("aria-expanded", String(open));
+  };
+  const opener = new IntersectionObserver((entries) => {
+    for (const { target, isIntersecting } of entries) {
+      if (!isIntersecting) continue;
+      opener.unobserve(target);
+      setTimeout(() => setOpen(target, true), reduceMotion.matches ? 0 : 450);
+    }
+  }, { threshold: 0.55 });
+  for (const desk of desks) {
+    opener.observe(desk);
+    const scissors = desk.querySelector(".desk-scissors");
+    // Respond on press, not release (the real status item does).
+    scissors.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      opener.unobserve(desk);
+      setOpen(desk, !desk.classList.contains("is-open"));
+    });
+    scissors.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      opener.unobserve(desk);
+      setOpen(desk, !desk.classList.contains("is-open"));
+    });
+    desk.addEventListener("pointerdown", (e) => {
+      if (e.target === desk || e.target.classList.contains("desk-bg")) setOpen(desk, false);
+    });
+  }
+
   // ───────────── Hero tilt: follows the pointer on a spring ─────────────
   // Per-axis springs (X and Y decomposed) integrated every frame, so the
   // window always moves from where it is now and can be redirected

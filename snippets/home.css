@@ -183,12 +183,20 @@
 }
 .pair-card h3 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 10px; }
 .pair-card p { margin: 0 0 24px; font-size: 16px; }
-/* A real capture of the menu bar with the panel open over the desktop,
-   cropped square around the panel. It bleeds to the card's edges and fades
-   out at the sides and bottom into the glass, so it reads as a window onto
-   the desktop rather than a pasted image. */
+/* The menu bar scene: the bare desktop (wallpaper and menu bar) with the
+   panel as its own layer, cut from captures taken on the same screen, so it
+   sits exactly where macOS drew it and its frosted glass matches what is
+   behind it. Coordinates are fractions of the 1100px square crop:
+   panel 684×846 at (210, 72); scissors centred at (550.5, 33).
+
+   The panel springs open from the scissors when the card arrives, and the
+   scissors toggle it, like the real status item. The scene fades out at the
+   sides and bottom into the glass card. */
 .desk {
+  position: relative;
   margin: auto -28px 0;
+  aspect-ratio: 1;
+  overflow: hidden;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0, #000 18%, #000 82%, transparent 100%),
     linear-gradient(to bottom, #000 70%, transparent 100%);
@@ -197,20 +205,68 @@
     linear-gradient(to right, transparent 0, #000 18%, #000 82%, transparent 100%),
     linear-gradient(to bottom, #000 70%, transparent 100%);
           mask-composite: intersect;
-  overflow: hidden;
 }
-.desk img {
+.desk-bg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
-/* The scene settles in as the card arrives, on the page spring. */
-.js .pair-card.reveal .desk img {
-  transform: scale(1.04);
-  transform-origin: 50% 0;
+
+/* The status item's pressed capsule, as macOS draws it while its menu is open. */
+.desk-highlight {
+  position: absolute;
+  left: calc(550.5 / 1100 * 100%);
+  top: calc(33 / 1100 * 100%);
+  width: calc(64 / 1100 * 100%);
+  height: calc(44 / 1100 * 100%);
+  translate: -50% -50%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.24);
+  opacity: 0;
+  transition: opacity 120ms ease-out;
 }
-.js .pair-card.reveal.is-in .desk img {
+.desk.is-open .desk-highlight { opacity: 1; }
+
+.desk-scissors {
+  position: absolute;
+  left: calc(550.5 / 1100 * 100%);
+  top: calc(33 / 1100 * 100%);
+  width: calc(90 / 1100 * 100%);
+  height: calc(66 / 1100 * 100%);
+  translate: -50% -50%;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+}
+.desk-scissors:focus-visible { outline-offset: 0; }
+
+.desk-panel {
+  position: absolute;
+  left: calc(210 / 1100 * 100%);
+  top: calc(72 / 1100 * 100%);
+  width: calc(684 / 1100 * 100%);
+  /* Grows out of the status item above it: the scissors sit at the panel's
+     horizontal centre, just over its top edge. */
+  transform-origin: 50% -4%;
+  filter: drop-shadow(0 14px 26px rgba(20, 0, 60, 0.35));
+  /* Closing: quick and plain, like DSMotion.popoverOut. */
+  opacity: 0;
+  transform: translate3d(0, -1.5%, 0) scale(0.92);
+  transition: opacity 130ms ease-out, transform 160ms ease-out;
+  pointer-events: none;
+}
+.desk-panel img { width: 100%; height: auto; }
+.desk.is-open .desk-panel {
+  /* Opening: the popover spring (response 0.22, damping 1) — critically
+     damped, so it lands without bounce. CSS transitions start from the
+     current value, so a click mid-flight reverses smoothly. */
+  opacity: 1;
   transform: none;
-  transition: transform var(--spring-page-d) var(--spring-page) 120ms;
+  pointer-events: auto;
+  transition: opacity 140ms ease-out, transform var(--spring-pop-d) var(--spring-pop);
 }
 
 /* ───────────── More ───────────── */
@@ -324,6 +380,6 @@
 @media (prefers-reduced-motion: reduce) {
   .js .hero-window.reveal { transform: none; }
   .mini { transition: none; }
-  .js .pair-card.reveal .desk img { transform: none; }
+  .desk-panel, .desk.is-open .desk-panel { transform: none; transition: opacity 160ms ease; }
   .mini:hover { transform: none; }
 }
