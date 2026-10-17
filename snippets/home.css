@@ -329,6 +329,7 @@
   filter: drop-shadow(0 18px 30px rgba(10, 132, 255, 0.28));
 }
 .download .lede { margin: 12px 0 28px; }
+.download .reveal:has(> .btn) { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
 .steps {
   list-style: none;

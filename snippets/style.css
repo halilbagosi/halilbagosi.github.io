@@ -345,6 +345,10 @@ img, video { display: block; max-width: 100%; }
 
 .nav .btn { padding: 7px 14px; font-size: 14px; }
 
+/* Support Snippets: glass, with the icon's pink heart. */
+.btn-sponsor svg { color: var(--pink); width: 15px; height: 15px; transition: transform 200ms var(--ease-out); }
+.btn-sponsor:hover svg { transform: scale(1.15); }
+
 /* ───────────── Type ───────────── */
 
 .eyebrow,
@@ -544,6 +548,10 @@ code, kbd {
   .nav-links { display: none; }
   .wrap { padding: 0 18px; }
   .doc { padding-top: 48px; }
+}
+@media (max-width: 980px) {
+  .nav .btn-sponsor span { display: none; }
+  .nav .btn-sponsor { padding: 7px 10px; }
 }
 @media (max-width: 420px) {
   .nav .btn span { display: none; }
