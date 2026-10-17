@@ -54,7 +54,7 @@
   flex-wrap: wrap;
 }
 .hero-meta {
-  margin: 18px 0 0;
+  margin: 8px 0 0;
   font-family: var(--mono);
   font-size: 13px;
   color: var(--text-3);
