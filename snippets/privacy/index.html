@@ -2,30 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Privacy Policy · Snippets</title>
   <meta name="description" content="Snippets collects no personal data. Everything you create stays on your Mac.">
+  <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1014" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="../icon.png">
   <link rel="stylesheet" href="../style.css">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <script src="../site.js" defer></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="../"><img src="../icon.png" alt="">Snippets</a>
-      <nav class="site-nav">
-        <a href="../support/">Support</a>
-        <a href="../privacy/" aria-current="page">Privacy</a>
-        <a href="../license/">License</a>
-      </nav>
+  <div class="backdrop" aria-hidden="true">
+    <div class="glow glow-a"></div>
+    <div class="glow glow-b"></div>
+  </div>
+
+  <header class="nav glass">
+    <a class="brand" href="../"><img src="../icon.png" alt="">snippets</a>
+    <nav class="nav-links" aria-label="Site">
+      <a href="../support/">support</a>
+      <a href="../privacy/" aria-current="page">privacy</a>
+      <a href="../license/">license</a>
+    </nav>
+    <div class="theme-toggle" role="group" aria-label="Appearance">
+      <span class="thumb" aria-hidden="true"></span>
+      <button type="button" data-choice="auto" aria-pressed="true" title="Match system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/></svg><span class="sr-only">Match system</span></button>
+      <button type="button" data-choice="light" aria-pressed="false" title="Light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1"/></svg><span class="sr-only">Light</span></button>
+      <button type="button" data-choice="dark" aria-pressed="false" title="Dark"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.5 10.2A6 6 0 0 1 5.8 2.5a6 6 0 1 0 7.7 7.7z"/></svg><span class="sr-only">Dark</span></button>
     </div>
+    <a class="btn btn-primary" href="../#download"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10"/></svg><span>download</span></a>
   </header>
 
-  <main>
-    <div class="wrap">
-      <h1>Privacy Policy</h1>
-      <p class="meta">Effective 17 October 2026</p>
+  <main class="doc">
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow reveal">// privacy</p>
+      <h1 class="headline reveal">Privacy Policy</h1>
+      <p class="meta reveal">Effective 17 October 2026</p>
 
-      <div class="card summary">
+      <div class="card glass card-accent reveal">
         <p><strong>The short version:</strong> Snippets collects no personal data. It has no
         accounts, analytics, advertising or tracking, and it never sends your snippets to me or
         to anyone else. Everything you create stays on your Mac.</p>
@@ -118,10 +133,10 @@
   <footer class="site-footer">
     <div class="wrap">
       <span>© 2026 Halil Bagosi</span>
-      <nav>
-        <a href="../support/">Support</a>
-        <a href="../privacy/">Privacy</a>
-        <a href="../license/">License</a>
+      <nav aria-label="Footer">
+        <a href="../support/">support</a>
+        <a href="../privacy/">privacy</a>
+        <a href="../license/">license</a>
       </nav>
     </div>
   </footer>
