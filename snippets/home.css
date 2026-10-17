@@ -72,18 +72,15 @@
   border-radius: 18px;
 }
 .tilt { will-change: transform; border-radius: inherit; }
+/* The screenshot is a macOS window capture: transparent surround, its own
+   rounded corners and shadow. Scale it so the window itself spans the
+   column (it is 91.6% of the capture's width) and pull the transparent
+   margin back in. */
 .hero-window img {
-  width: 100%;
+  width: 109.17%;
+  max-width: none;
   height: auto;
-  border-radius: 18px;
-  box-shadow:
-    0 0 0 1px var(--glass-edge),
-    0 2px 6px rgba(0, 0, 0, 0.06),
-    0 40px 90px -24px rgba(15, 23, 42, 0.38);
-}
-:root[data-theme="dark"] .hero-window img { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 40px 100px -20px rgba(0, 0, 0, 0.75); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .hero-window img { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 40px 100px -20px rgba(0, 0, 0, 0.75); }
+  margin: -3.11% -4.585% -3%;
 }
 
 /* Hero entrance: the window materializes on the slower page spring. */
@@ -96,22 +93,6 @@
   transition-delay: 160ms;
 }
 
-/* The quick-copy panel overlaps the window's corner, like the real menu
-   bar panel floating above the app. */
-.hero-panel {
-  position: absolute;
-  right: -8px;
-  bottom: -12px;
-  width: min(26%, 300px);
-  will-change: translate;
-}
-.hero-panel img {
-  width: 100%;
-  height: auto;
-  border-radius: 22px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 70px -18px rgba(15, 23, 42, 0.5);
-}
-.js .hero-panel .reveal.is-in { transition-delay: 420ms; }
 
 /* ───────────── Languages ───────────── */
 
@@ -173,6 +154,12 @@
   border-radius: var(--r-lg);
   background: var(--code-bg);
 }
+/* A clip that is itself a window: the frame takes the window's own corner
+   radius (16px on the 1520px capture), so no corner of the frame shows past
+   the window's. Container units keep it in proportion at any width. */
+.feature-media { container-type: inline-size; }
+.media-window { border-radius: calc(16 / 1520 * 100cqw); }
+
 .media-frame video {
   width: 100%;
   height: 100%;
@@ -195,21 +182,102 @@
   border-radius: var(--r-xl);
 }
 .pair-card h3 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 10px; }
-.pair-card p { margin: 0 0 28px; font-size: 16px; }
-.pair-shot {
-  margin-top: auto;
+.pair-card p { margin: 0 0 24px; font-size: 16px; }
+/* A slice of a Mac desktop, as in the onboarding tour: the macOS 26-style
+   wallpaper, the menu bar with the open Snippets status item, and the panel
+   hanging from it. It fades out at the sides and bottom into the glass card,
+   so it reads as a window onto the desktop rather than a pasted image. */
+.desk {
+  position: relative;
+  margin: auto -28px 0;                 /* bleed to the card's edges */
+  height: 380px;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 70% at 62% 42%, #8597f9 0%, transparent 70%),
+    radial-gradient(50% 60% at 18% 30%, #4c24cc 0%, transparent 75%),
+    radial-gradient(55% 65% at 88% 65%, #384ddb 0%, transparent 75%),
+    radial-gradient(70% 60% at 45% 105%, #5c66eb 0%, transparent 70%),
+    linear-gradient(160deg, #1f148c 0%, #2a39d9 55%, #1a1a7a 100%);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 22%, #000 78%, transparent 100%),
+    linear-gradient(to bottom, #000 62%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-image:
+    linear-gradient(to right, transparent 0, #000 22%, #000 78%, transparent 100%),
+    linear-gradient(to bottom, #000 62%, transparent 100%);
+          mask-composite: intersect;
+}
+
+.desk-bar {
+  position: relative;
+  height: 28px;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 12.5px;
+  letter-spacing: -0.005em;
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
 }
-.pair-shot img {
-  width: min(78%, 340px);
+/* App menus run off the left edge; the status item sits at the centre so the
+   panel can hang beneath it, with the system extras to its right. */
+.desk-menus {
+  position: absolute;
+  right: calc(50% + 26px);
+  display: flex;
+  gap: 16px;
+  white-space: nowrap;
+  opacity: 0.92;
+}
+.desk-menus b { font-weight: 700; }
+.desk-status {
+  position: absolute;
+  left: calc(50% - 15px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
+}
+.desk-item {
+  display: grid;
+  place-items: center;
+  height: 22px;
+  min-width: 30px;
+  border-radius: 999px;
+}
+.desk-item svg { width: 15px; height: 13px; }
+.desk-item.is-open { background: rgba(255, 255, 255, 0.25); }
+.desk-clock { font-variant-numeric: tabular-nums; }
+
+.desk-panel {
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  width: min(300px, 74%);
+  translate: -50% 0;
+}
+.desk-panel img {
+  width: 100%;
   height: auto;
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 0 0 1px var(--glass-edge), 0 -8px 40px -12px rgba(15, 23, 42, 0.3);
-  transform: translateY(14px);
-  transition: transform var(--spring-reveal-d) var(--spring-reveal);
+  border-radius: 18px;
+  box-shadow: 0 18px 44px -10px rgba(5, 5, 40, 0.6);
 }
-.pair-card:hover .pair-shot img { transform: translateY(0); }
+/* The panel drops from the status item when the card arrives, like opening
+   it — on the page spring. */
+.js .pair-card.reveal .desk-panel img {
+  transform: translate3d(0, -14px, 0) scale(0.97);
+  transform-origin: 50% 0;
+  opacity: 0;
+}
+.js .pair-card.reveal.is-in .desk-panel img {
+  transform: none;
+  opacity: 1;
+  transition:
+    opacity 300ms var(--ease-out) 180ms,
+    transform var(--spring-reveal-d) var(--spring-reveal) 180ms;
+}
 
 /* ───────────── More ───────────── */
 
@@ -313,8 +381,6 @@
 @media (max-width: 640px) {
   .hero { padding-top: 56px; }
   .hero-stage { margin-top: 48px; }
-  .hero-panel { width: 36%; right: 10px; bottom: 0; }
-  .hero-window img, .hero-window { border-radius: 10px; }
   .pair { grid-template-columns: 1fr; padding-top: 88px; }
   .more-grid { grid-template-columns: 1fr; }
   .privacy-card { padding: 40px 22px; }
@@ -323,7 +389,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .js .hero-window.reveal { transform: none; }
-  .pair-shot img, .mini { transition: none; }
-  .pair-shot img { transform: none; }
+  .mini { transition: none; }
+  .js .pair-card.reveal .desk-panel img { transform: none; }
   .mini:hover { transform: none; }
 }

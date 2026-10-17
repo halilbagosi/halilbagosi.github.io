@@ -154,37 +154,4 @@
     area.addEventListener("pointerleave", () => { axes.x.to = 0; axes.y.to = 0; kick(); });
   }
 
-  // ───────────── Scroll parallax for floating panels ─────────────
-  // transform-only, one rAF per scroll burst.
-
-  const floaters = [...document.querySelectorAll("[data-parallax]")];
-  if (floaters.length) {
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      if (reduceMotion.matches) return;
-      const vh = innerHeight;
-      for (const el of floaters) {
-        const r = el.parentElement.getBoundingClientRect();
-        const progress = (r.top + r.height / 2 - vh / 2) / vh; // 0 when centred
-        el.style.translate = `0 ${(progress * parseFloat(el.dataset.parallax)).toFixed(1)}px`;
-      }
-    };
-    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-    update();
-  }
-
-  // ───────────── Copy-to-clipboard for the install command ─────────────
-
-  document.querySelectorAll("[data-copy]").forEach((b) => {
-    b.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(b.dataset.copy);
-        const label = b.querySelector("span");
-        const was = label.textContent;
-        label.textContent = "copied";
-        setTimeout(() => (label.textContent = was), 1400);
-      } catch {}
-    });
-  });
 })();
