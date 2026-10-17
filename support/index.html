@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Snippets Support</title>
+  <meta name="description" content="Get help with Snippets for macOS: answers to common questions and how to contact support.">
+  <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1014" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../icon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="../icon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="../style.css">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <script src="../site.js" defer></script>
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true">
+    <div class="glow glow-a"></div>
+    <div class="glow glow-b"></div>
+  </div>
+
+  <header class="nav glass">
+    <a class="brand" href="../"><img class="theme-light" src="../icon-light.png" alt=""><img class="theme-dark" src="../icon-dark.png" alt="">snippets</a>
+    <nav class="nav-links" aria-label="Site">
+      <a href="../#features">features</a>
+      <a href="../support/" aria-current="page">support</a>
+      <a href="../privacy/">privacy</a>
+      <a href="../license/">license</a>
+    </nav>
+    <div class="theme-toggle" role="group" aria-label="Appearance">
+      <span class="thumb" aria-hidden="true"></span>
+      <button type="button" data-choice="auto" aria-pressed="true" title="Match system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/></svg><span class="sr-only">Match system</span></button>
+      <button type="button" data-choice="light" aria-pressed="false" title="Light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1"/></svg><span class="sr-only">Light</span></button>
+      <button type="button" data-choice="dark" aria-pressed="false" title="Dark"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.5 10.2A6 6 0 0 1 5.8 2.5a6 6 0 1 0 7.7 7.7z"/></svg><span class="sr-only">Dark</span></button>
+    </div>
+    <a class="btn btn-glass btn-sponsor" href="https://github.com/sponsors/halilbagosi" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 14.2 6.9 13.2C3 9.7.5 7.4.5 4.6.5 2.4 2.2.7 4.4.7c1.2 0 2.5.6 3.6 1.8C9.1 1.3 10.4.7 11.6.7c2.2 0 3.9 1.7 3.9 3.9 0 2.8-2.5 5.1-6.4 8.6z"/></svg><span>Support Snippets</span></a>
+    <a class="btn btn-primary" href="../#download"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10"/></svg><span>download</span></a>
+  </header>
+
+  <main class="doc">
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow reveal">// support</p>
+      <h1 class="headline reveal">How can I help?</h1>
+      <p class="lede reveal">Answers to common questions, and how to reach me if yours isn’t here.</p>
+
+      <div class="card glass contact reveal">
+        <a class="btn btn-primary" href="mailto:support@halilbagosi.com?subject=Snippets%20support">Email support</a>
+        <p>support@halilbagosi.com</p>
+      </div>
+      <p class="reveal">To help me fix a problem quickly, please include:</p>
+      <ul class="reveal">
+        <li>your Snippets version (<strong>Snippets ▸ About Snippets</strong>) and macOS version;</li>
+        <li>what you did, what you expected, and what happened instead;</li>
+        <li>a screenshot or the snippet involved, if you can share it.</li>
+      </ul>
+
+      <h2 class="reveal">Common questions</h2>
+      <div class="faq reveal">
+
+      <details>
+        <summary>What do I need to run Snippets?</summary>
+        <p>A Mac running macOS 26 or later. To preview Swift snippets you also need Xcode
+        installed. Snippets finds the Swift compiler through <code>xcrun</code>, so it uses
+        whichever Xcode <code>xcode-select</code> points to.</p>
+      </details>
+
+      <details>
+        <summary>Why doesn’t my preview run on its own?</summary>
+        <p>Previewing a snippet runs its code, so by default Snippets waits for you to press
+        <strong>Run</strong>. To run web and Metal previews automatically, turn on
+        <strong>Run Previews Automatically</strong> in <strong>Settings ▸ Preferences</strong>.
+        Swift previews always wait for you to press Run, whatever the setting says.</p>
+      </details>
+
+      <details>
+        <summary>A preview says it needs packages from esm.sh</summary>
+        <p>Web snippets that import npm packages (such as framer-motion or gsap) load them from
+        esm.sh. Snippets asks you first, separately for each snippet, with a banner naming the
+        packages. Allow it to run the preview. This is the only way a preview reaches the
+        internet, and it needs a connection.</p>
+      </details>
+
+      <details>
+        <summary>My Swift preview doesn’t compile</summary>
+        <ul>
+          <li>Only macOS code works. UIKit and iOS-only APIs won’t compile.</li>
+          <li>A view must be creatable with no arguments. If yours needs arguments, add a
+          <code>#Preview { … }</code> block that creates it.</li>
+          <li>A type from another snippet is only found if that snippet is one of this snippet’s
+          <strong>connections</strong> (editor ▸ connections).</li>
+          <li>Errors point at the line, e.g. <code>snippet:12:5</code>. Common mistakes come with
+          a hint.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Snippets quit when I ran a Swift preview</summary>
+        <p>A SwiftUI view preview runs inside Snippets itself, so a crash in the view, such as
+        force-unwrapping <code>nil</code>, takes the app down with it. Your library is safe;
+        reopen Snippets and fix the code. Console programs run separately, so a crash there only
+        ends that run.</p>
+      </details>
+
+      <details>
+        <summary>How do I back up my library or move it to another Mac?</summary>
+        <p>Choose <strong>File ▸ Export Library…</strong> (⇧⌘E) to save every snippet, with its
+        collections, connections, preview settings and media, to one <code>.snippets</code> file.
+        On the other Mac, choose <strong>File ▸ Import Snippets…</strong> (⇧⌘I) or just open the
+        file. If a snippet already exists, you can skip it, replace it, or stop.</p>
+      </details>
+
+      <details>
+        <summary>I deleted a snippet by mistake</summary>
+        <p>Deleted snippets go to <strong>Trash</strong> in the sidebar first. Open Trash and
+        restore it from there.</p>
+      </details>
+
+      <details>
+        <summary>How does saving copied code work?</summary>
+        <p>Turn on <strong>Offer to Save Copied Code</strong> in <strong>Settings ▸
+        Preferences</strong>. When you copy something in another app that looks like code,
+        Snippets offers to save it. It ignores anything password managers and other apps mark
+        as private, and it saves nothing unless you choose to.</p>
+      </details>
+
+      <details>
+        <summary>How do I copy a snippet without switching apps?</summary>
+        <p>Click the scissors icon in the menu bar. Type to search, use ↑ and ↓ to choose, and
+        press ⏎ to copy. ⌘1–⌘4 switch between Favorites, Frequent, Recent and All, and ⌘⏎ opens
+        the snippet in the main window.</p>
+      </details>
+
+      <details>
+        <summary>I closed the window but Snippets is still running</summary>
+        <p>That’s intended: Snippets stays in the menu bar so quick copy keeps working. To quit,
+        open the menu bar panel and click <strong>Quit</strong> in its footer, or press ⌘Q while
+        Snippets is the active app.</p>
+      </details>
+
+      <details>
+        <summary>Can I use Snippets from Shortcuts or Siri?</summary>
+        <p>Yes. Snippets offers actions to create, find, copy, open and favorite snippets. Find
+        them in the Shortcuts app under Snippets.</p>
+      </details>
+
+      <details>
+        <summary>Does Snippets collect my data?</summary>
+        <p>No. Everything stays on your Mac. See the <a href="../privacy/">Privacy Policy</a>.</p>
+      </details>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© 2026 Halil Bagosi</span>
+      <nav aria-label="Footer">
+        <a href="../support/">support</a>
+        <a href="../privacy/">privacy</a>
+        <a href="../license/">license</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
