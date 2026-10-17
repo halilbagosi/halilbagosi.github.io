@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snippets Support</title>
+  <meta name="description" content="Get help with Snippets for macOS: answers to common questions and how to contact support.">
+  <link rel="icon" href="../icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="../"><img src="../icon.png" alt="">Snippets</a>
+      <nav class="site-nav">
+        <a href="../support/" aria-current="page">Support</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="../license/">License</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <h1>Support</h1>
+      <p class="lede">Answers to common questions, and how to reach me if yours isn’t here.</p>
+
+      <div class="card contact">
+        <a class="button" href="mailto:support@halilbagosi.com?subject=Snippets%20support">Email support</a>
+        <p>support@halilbagosi.com</p>
+      </div>
+      <p>To help me fix a problem quickly, please include:</p>
+      <ul>
+        <li>your Snippets version (<strong>Snippets ▸ About Snippets</strong>) and macOS version;</li>
+        <li>what you did, what you expected, and what happened instead;</li>
+        <li>a screenshot or the snippet involved, if you can share it.</li>
+      </ul>
+
+      <h2>Common questions</h2>
+
+      <details>
+        <summary>What do I need to run Snippets?</summary>
+        <p>A Mac running macOS 26 or later. To preview Swift snippets you also need Xcode
+        installed. Snippets finds the Swift compiler through <code>xcrun</code>, so it uses
+        whichever Xcode <code>xcode-select</code> points to.</p>
+      </details>
+
+      <details>
+        <summary>Why doesn’t my preview run on its own?</summary>
+        <p>Previewing a snippet runs its code, so by default Snippets waits for you to press
+        <strong>Run</strong>. To run web and Metal previews automatically, turn on
+        <strong>Run Previews Automatically</strong> in <strong>Settings ▸ Preferences</strong>.
+        Swift previews always wait for you to press Run, whatever the setting says.</p>
+      </details>
+
+      <details>
+        <summary>A preview says it needs packages from esm.sh</summary>
+        <p>Web snippets that import npm packages (such as framer-motion or gsap) load them from
+        esm.sh. Snippets asks you first, separately for each snippet, with a banner naming the
+        packages. Allow it to run the preview. This is the only way a preview reaches the
+        internet, and it needs a connection.</p>
+      </details>
+
+      <details>
+        <summary>My Swift preview doesn’t compile</summary>
+        <ul>
+          <li>Only macOS code works. UIKit and iOS-only APIs won’t compile.</li>
+          <li>A view must be creatable with no arguments. If yours needs arguments, add a
+          <code>#Preview { … }</code> block that creates it.</li>
+          <li>A type from another snippet is only found if that snippet is one of this snippet’s
+          <strong>connections</strong> (editor ▸ connections).</li>
+          <li>Errors point at the line, e.g. <code>snippet:12:5</code>. Common mistakes come with
+          a hint.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Snippets quit when I ran a Swift preview</summary>
+        <p>A SwiftUI view preview runs inside Snippets itself, so a crash in the view, such as
+        force-unwrapping <code>nil</code>, takes the app down with it. Your library is safe;
+        reopen Snippets and fix the code. Console programs run separately, so a crash there only
+        ends that run.</p>
+      </details>
+
+      <details>
+        <summary>How do I back up my library or move it to another Mac?</summary>
+        <p>Choose <strong>File ▸ Export Library…</strong> (⇧⌘E) to save every snippet, with its
+        collections, connections, preview settings and media, to one <code>.snippets</code> file.
+        On the other Mac, choose <strong>File ▸ Import Snippets…</strong> (⇧⌘I) or just open the
+        file. If a snippet already exists, you can skip it, replace it, or stop.</p>
+      </details>
+
+      <details>
+        <summary>I deleted a snippet by mistake</summary>
+        <p>Deleted snippets go to <strong>Trash</strong> in the sidebar first. Open Trash and
+        restore it from there.</p>
+      </details>
+
+      <details>
+        <summary>How does saving copied code work?</summary>
+        <p>Turn on <strong>Offer to Save Copied Code</strong> in <strong>Settings ▸
+        Preferences</strong>. When you copy something in another app that looks like code,
+        Snippets offers to save it. It ignores anything password managers and other apps mark
+        as private, and it saves nothing unless you choose to.</p>
+      </details>
+
+      <details>
+        <summary>How do I copy a snippet without switching apps?</summary>
+        <p>Click the scissors icon in the menu bar. Type to search, use ↑ and ↓ to choose, and
+        press ⏎ to copy. ⌘1–⌘4 switch between Favorites, Frequent, Recent and All, and ⌘⏎ opens
+        the snippet in the main window.</p>
+      </details>
+
+      <details>
+        <summary>I closed the window but Snippets is still running</summary>
+        <p>That’s intended: Snippets stays in the menu bar so quick copy keeps working. To quit,
+        open the menu bar panel and click <strong>Quit</strong> in its footer, or press ⌘Q while
+        Snippets is the active app.</p>
+      </details>
+
+      <details>
+        <summary>Can I use Snippets from Shortcuts or Siri?</summary>
+        <p>Yes. Snippets offers actions to create, find, copy, open and favorite snippets. Find
+        them in the Shortcuts app under Snippets.</p>
+      </details>
+
+      <details>
+        <summary>Does Snippets collect my data?</summary>
+        <p>No. Everything stays on your Mac. See the <a href="../privacy/">Privacy Policy</a>.</p>
+      </details>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© 2026 Halil Bagosi</span>
+      <nav>
+        <a href="../support/">Support</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="../license/">License</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
