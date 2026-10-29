@@ -191,4 +191,159 @@
     area.addEventListener("pointerleave", () => { axes.x.to = 0; axes.y.to = 0; kick(); });
   }
 
+  // ───────────── Continuous corners ─────────────
+  // CSS rounds corners with circular arcs; Apple's continuous ("squircle")
+  // corners ease into the curve instead. Safari has no corner-shape, so each
+  // rounded element gets an even-odd clip path of three rings: a large
+  // rectangle (so the drop shadow outside the box still shows), a circular
+  // rounded rect, and the continuous shape, which cuts away whatever lies
+  // between the two. The CSS radius is lowered to the largest circle that
+  // still contains the continuous shape: Safari clips a composited glass
+  // layer's backdrop by border-radius alone, not by the clip path. A CSS
+  // border would be cut away with the corners, so it is redrawn on the
+  // continuous outline as an SVG background layer.
+
+  const SMOOTHING = 1;     // Figma corner smoothing: 1 = curvature ramps over the whole corner
+  const BLEED = 80;        // room around the box for its drop shadow
+  const touched = new WeakMap();
+  const n = (v) => +v.toFixed(2);
+
+  // Figma's squircle construction (figma-squircle, MIT): a circular arc in
+  // the middle of each corner, eased into the edges by two cubic Béziers.
+  function continuousPath(x, y, w, h, radius) {
+    const max = Math.min(w, h) / 2;
+    const R = Math.min(radius, max);
+    const s = Math.max(0, Math.min(SMOOTHING, max / R - 1));
+    const p = (1 + s) * R;
+    const rad = (deg) => (deg * Math.PI) / 180;
+    const arcMeasure = 90 * (1 - s);
+    const arc = Math.sin(rad(arcMeasure / 2)) * R * Math.SQRT2;
+    const c = R * Math.tan(rad((90 - arcMeasure) / 4)) * Math.cos(rad(45 * s));
+    const d = c * Math.tan(rad(45 * s));
+    const b = (p - arc - c - d) / 3;
+    const a = 2 * b;
+    const [A, AB, ABC, BC] = [a, a + b, a + b + c, b + c].map(n);
+    const [D, C, ARC, RR] = [d, c, arc, R].map(n);
+    return `M${n(x + w - p)} ${n(y)}c${A} 0 ${AB} 0 ${ABC} ${D}a${RR} ${RR} 0 0 1 ${ARC} ${ARC}c${D} ${C} ${D} ${BC} ${D} ${ABC}` +
+      `L${n(x + w)} ${n(y + h - p)}c0 ${A} 0 ${AB} ${-D} ${ABC}a${RR} ${RR} 0 0 1 ${-ARC} ${ARC}c${-C} ${D} ${-BC} ${D} ${-ABC} ${D}` +
+      `L${n(x + p)} ${n(y + h)}c${-A} 0 ${-AB} 0 ${-ABC} ${-D}a${RR} ${RR} 0 0 1 ${-ARC} ${-ARC}c${-D} ${-C} ${-D} ${-BC} ${-D} ${-ABC}` +
+      `L${n(x)} ${n(y + p)}c0 ${-A} 0 ${-AB} ${D} ${-ABC}a${RR} ${RR} 0 0 1 ${ARC} ${-ARC}c${C} ${-D} ${BC} ${-D} ${ABC} ${-D}Z`;
+  }
+
+  // A capsule with continuous ends: each end is half a superellipse, so its
+  // curvature starts at zero where it leaves the straight edge (a semicircle
+  // jumps straight to full curvature there).
+  const CAPSULE_EXPONENT = 2.5;
+  const CAPSULE_REACH = 1.2;   // how far each end reaches along the edge, × radius
+  function capsulePath(x, y, w, h) {
+    const R = h / 2, k = Math.min(CAPSULE_REACH * R, w / 2), e = 2 / CAPSULE_EXPONENT;
+    const pow = (v) => Math.sign(v) * Math.abs(v) ** e;
+    const end = (cx, side) => {
+      const pts = [];
+      for (let i = 0; i <= 32; i++) {
+        const t = Math.PI * (i / 32 - 0.5);   // -90° → 90°
+        pts.push(`${n(cx + side * k * pow(Math.cos(t)))} ${n(y + R + side * R * pow(Math.sin(t)))}`);
+      }
+      return pts;
+    };
+    return `M${end(x + w - k, 1).join("L")}L${end(x + k, -1).join("L")}Z`;
+  }
+
+  function roundedPath(w, h, r) {
+    r = n(r);
+    return `M${r} 0H${n(w - r)}A${r} ${r} 0 0 1 ${n(w)} ${r}V${n(h - r)}A${r} ${r} 0 0 1 ${n(w - r)} ${n(h)}` +
+      `H${r}A${r} ${r} 0 0 1 0 ${n(h - r)}V${r}A${r} ${r} 0 0 1 ${r} 0Z`;
+  }
+
+  // The largest circular corner radius whose rounded rect still contains
+  // the outline `d`, found from points along its top-left corner.
+  const probe = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  function containedRadius(d, w, h) {
+    probe.setAttribute("d", d);
+    const length = probe.getTotalLength(), pts = [];
+    for (let i = 0; i <= 400; i++) {
+      const q = probe.getPointAtLength((length * i) / 400);
+      if (q.x < w / 2 && q.y < h / 2) pts.push(q);
+    }
+    const fits = (r) => pts.every((q) => q.x >= r || q.y >= r || (q.x - r) ** 2 + (q.y - r) ** 2 <= r * r + 0.01);
+    let lo = 0, hi = Math.min(w, h) / 2;
+    for (let i = 0; i < 20; i++) { const mid = (lo + hi) / 2; fits(mid) ? (lo = mid) : (hi = mid); }
+    return lo;
+  }
+
+  // Top-level comma split: "url(a), linear-gradient(red, blue)" → 2 layers.
+  function layers(value) {
+    const out = [];
+    let depth = 0, start = 0;
+    for (let i = 0; i < value.length; i++) {
+      if (value[i] === "(") depth++;
+      else if (value[i] === ")") depth--;
+      else if (value[i] === "," && depth === 0) { out.push(value.slice(start, i).trim()); start = i + 1; }
+    }
+    out.push(value.slice(start).trim());
+    return out;
+  }
+
+  const PROPS = ["clipPath", "borderRadius", "borderColor", "backgroundImage", "backgroundSize", "backgroundRepeat", "backgroundOrigin", "backgroundPosition"];
+
+  function reset(el) {
+    if (!touched.has(el)) return;
+    for (const prop of PROPS) el.style[prop] = "";
+    touched.delete(el);
+  }
+
+  function shape(el) {
+    reset(el);
+    const cs = getComputedStyle(el);
+    const radius = parseFloat(cs.borderTopLeftRadius);
+    const w = el.offsetWidth, h = el.offsetHeight;
+    if (cs.display === "inline" || !w || !h || !(radius >= 3)) return;
+    const capsule = radius >= Math.min(w, h) / 2 - 0.5;
+    if (capsule && w < h * 1.2) return;   // a circle, or nearly: leave it round
+    const outline = (inset) => capsule
+      ? capsulePath(inset, inset, w - 2 * inset, h - 2 * inset)
+      : continuousPath(inset, inset, w - 2 * inset, h - 2 * inset, Math.max(0, radius - inset));
+
+    const d = outline(0);
+    const inner = containedRadius(d, w, h);
+    el.style.borderRadius = `${n(inner)}px`;
+    el.style.clipPath = `path(evenodd, "M${-BLEED} ${-BLEED}H${w + BLEED}V${h + BLEED}H${-BLEED}Z` +
+      `${roundedPath(w, h, inner)}${d}")`;
+
+    const bw = parseFloat(cs.borderTopWidth);
+    const color = cs.borderTopColor;
+    if (bw > 0 && !/rgba\(.*,\s*0\)$|transparent/.test(color)) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><path fill="none" stroke="${color}" stroke-width="${bw}" ` +
+        `d="${outline(bw / 2)}"/></svg>`;
+      const own = cs.backgroundImage === "none" ? [] : layers(cs.backgroundImage);
+      const list = (value, fallback) => {
+        const given = layers(value);
+        return [fallback, ...own.map((_, i) => given[i % given.length])].join(", ");
+      };
+      el.style.backgroundImage = [`url("data:image/svg+xml,${encodeURIComponent(svg)}")`, ...own].join(", ");
+      el.style.backgroundSize = list(cs.backgroundSize, "100% 100%");
+      el.style.backgroundRepeat = list(cs.backgroundRepeat, "no-repeat");
+      el.style.backgroundOrigin = list(cs.backgroundOrigin, "border-box");
+      el.style.backgroundPosition = list(cs.backgroundPosition, "0% 0%");
+      el.style.borderColor = "transparent";
+    }
+    touched.set(el, true);
+  }
+
+  if (window.ResizeObserver && CSS.supports("clip-path", 'path(evenodd, "M0 0H1V1Z")')) {
+    const shaped = [];
+    const sizes = new ResizeObserver((entries) => entries.forEach((e) => shape(e.target)));
+    for (const el of document.body.querySelectorAll("*")) {
+      if (el instanceof SVGElement) continue;
+      const r = getComputedStyle(el).borderTopLeftRadius;
+      if (r.includes("%") || !(parseFloat(r) >= 3)) continue;
+      shaped.push(el);
+      sizes.observe(el);
+    }
+    // Borders are baked into the SVG in the current theme's colour.
+    const reshape = () => shaped.forEach(shape);
+    new MutationObserver(reshape).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    systemDark.addEventListener("change", reshape);
+  }
+
 })();

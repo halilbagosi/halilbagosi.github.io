@@ -508,7 +508,6 @@ code, kbd {
 
 .card { padding: 24px 26px; margin: 24px 0; }
 .card > :last-child { margin-bottom: 0; }
-.card-accent { box-shadow: inset 3px 0 0 var(--accent), inset 0 1px 0 var(--glass-rim), var(--glass-shadow); }
 
 .contact { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .contact p { margin: 0; font-family: var(--mono); font-size: 14.5px; }
@@ -567,13 +566,14 @@ code, kbd {
   .wrap { padding: 0 18px; }
   .doc { padding-top: 48px; }
 }
+/* Icon-only nav buttons are exact circles, so the glyph sits dead centre. */
 @media (max-width: 980px) {
   .nav .btn-sponsor span { display: none; }
-  .nav .btn-sponsor { padding: 7px 10px; }
+  .nav .btn-sponsor { width: 36px; height: 36px; padding: 0; }
 }
 @media (max-width: 420px) {
   .nav .btn span { display: none; }
-  .nav .btn { padding: 7px 10px; }
+  .nav .btn { width: 36px; height: 36px; padding: 0; }
 }
 
 /* ───────────── Accessibility preferences ───────────── */

@@ -101,8 +101,8 @@
 
 /* ───────────── Languages ───────────── */
 
-.langs { padding: 88px 0 24px; text-align: center; }
-.langs-note { margin: 18px 0 0; font-size: 15px; }
+.langs { padding-block: 88px 24px; text-align: center; }
+.langs-note { margin: 18px auto 0; max-width: 34em; font-size: 15px; text-wrap: balance; }
 
 /* ───────────── Feature rows ───────────── */
 
@@ -286,26 +286,22 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
+/* Feature tiles: a quiet surface (no lift, no drop shadow) and a plain
+   line glyph in the text colour. */
 .mini {
-  --c: var(--accent);
-  padding: 22px;
-  transition: transform var(--spring-pop-d) var(--spring-pop), box-shadow 200ms var(--ease-out);
+  padding: 26px 26px 28px;
+  box-shadow: inset 0 1px 0 var(--glass-rim);
 }
-.mini:hover { transform: translateY(-3px); }
 .mini-icon {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  margin-bottom: 14px;
-  border-radius: 12px;
-  color: var(--c);
-  background: color-mix(in srgb, var(--c) 13%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 35%, transparent);
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 18px;
+  color: var(--text);
 }
-.mini-icon svg { width: 21px; height: 21px; }
-.mini h3 { margin-bottom: 6px; }
-.mini p { margin: 0; color: var(--text-3); font-size: 15px; }
+.mini-icon svg { display: block; width: 100%; height: 100%; }
+.mini h3 { font-size: 17px; margin: 0 0 6px; }
+.mini p { margin: 0; color: var(--text-3); font-size: 15px; line-height: 1.5; text-wrap: pretty; }
 
 /* ───────────── Privacy ───────────── */
 
@@ -335,36 +331,33 @@
 }
 .download .lede { margin: 12px 0 28px; }
 
+/* Install steps: plain columns split by hairlines, like Apple's own
+   how-to pages — the numeral carries the order, so no badge or card. */
 .steps {
   list-style: none;
   padding: 0;
-  margin: 56px auto 0;
+  margin: 64px auto 0;
   max-width: 980px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
   text-align: left;
 }
-.step {
-  display: flex;
-  gap: 14px;
-  padding: 20px;
-}
+.step { padding: 4px 32px 0; }
+.step:first-child { padding-left: 0; }
+.step:last-child { padding-right: 0; }
+.step + .step { border-left: 1px solid var(--glass-edge); }
 .step-n {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--accent-ink);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  display: block;
+  margin-bottom: 14px;
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
 }
-.step h3 { font-size: 16px; margin: 3px 0 4px; }
-.step p { margin: 0; font-size: 14.5px; }
+.step h3 { font-size: 17px; margin: 0 0 6px; }
+.step p { margin: 0; font-size: 15px; line-height: 1.5; text-wrap: pretty; }
 
 .download-legal { margin: 28px 0 0; font-size: 14px; }
 
@@ -375,6 +368,9 @@
   .feature-flip .feature-copy { order: 0; }
   .more-grid { grid-template-columns: 1fr 1fr; }
   .steps { grid-template-columns: 1fr; max-width: 480px; }
+  .step, .step:first-child, .step:last-child { padding: 24px 0; }
+  .step:first-child { padding-top: 0; }
+  .step + .step { border-left: 0; border-top: 1px solid var(--glass-edge); }
 }
 
 @media (max-width: 640px) {
@@ -388,7 +384,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .js .hero-window.reveal { transform: none; }
-  .mini { transition: none; }
   .desk-panel, .desk.is-open .desk-panel { transform: none; transition: opacity 160ms ease; }
-  .mini:hover { transform: none; }
 }
