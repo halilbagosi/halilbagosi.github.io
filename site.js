@@ -52,6 +52,24 @@
   systemDark.addEventListener("change", () => { if (!root.dataset.theme) syncVideos(); });
   paintToggle();
 
+  // ───────────── No download on phones and tablets ─────────────
+  // Snippets is a Mac app. The <head> script marks browsers whose user agent
+  // names iOS or Android before first paint. Touch support is no signal:
+  // Macs have touchscreens too (so iPadOS Safari, which says it is a Mac,
+  // gets the button as well).
+
+  if (root.dataset.device === "mobile") {
+    document.querySelectorAll('a.btn[href$="Snippets.dmg"]').forEach((a) => {
+      a.removeAttribute("href");
+      a.classList.add("is-disabled");
+      a.setAttribute("aria-disabled", "true");
+      a.setAttribute("role", "link");
+    });
+    document.querySelectorAll(".soon").forEach((p) => {
+      p.textContent = "Snippets is a Mac app. Open this page on your Mac to download it.";
+    });
+  }
+
   // ───────────── Nav material thickens once content scrolls under it ─────────────
 
   const nav = document.querySelector(".nav");

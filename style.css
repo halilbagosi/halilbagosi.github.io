@@ -342,9 +342,14 @@ img, video { display: block; max-width: 100%; }
 
 .btn-lg { font-size: 17px; padding: 14px 26px; }
 
-/* A button for something not available yet: greyed, not clickable. */
+/* A button for something not available yet: greyed, not clickable.
+   Download buttons are disabled on browsers that say they run on iOS or
+   Android (Snippets is a Mac app) — never by touch support, since Macs
+   have touchscreens too. The <head> script marks those devices before
+   first paint, and site.js then takes the link away. */
 .btn.is-disabled,
-.btn.is-disabled:hover {
+.btn.is-disabled:hover,
+:root[data-device="mobile"] .btn[href$="Snippets.dmg"] {
   color: var(--text-3);
   background: var(--glass-edge);
   border-color: var(--glass-edge);
@@ -353,6 +358,7 @@ img, video { display: block; max-width: 100%; }
   cursor: not-allowed;
 }
 .btn.is-disabled:active { transform: none; }
+:root[data-device="mobile"] .btn[href$="Snippets.dmg"] { pointer-events: none; }
 
 .soon {
   margin: 16px 0 0;
